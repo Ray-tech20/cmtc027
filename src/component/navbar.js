@@ -24,10 +24,15 @@ export default function Navbar(){
         <li className="nav-item">
           <Link className="nav-link mx-2" href="/contact">contact</Link>
         </li>
-        <li className="nav-item">
-          <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal"> sign in</button>                          
-          <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signupModal"> sign up</button>                          
-        </li>
+        <form className="d-flex ">
+            <Link href="/signup ">
+              <button type="button" className="btn btn-outline-success me-2" >
+                Sign Up
+              </button></Link>
+            <Link href="/"><button type="button" className="btn btn-outline-success" >
+              Sign In
+            </button></Link>
+          </form>
       </ul>
     </div>
   </div>
