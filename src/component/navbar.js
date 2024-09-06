@@ -1,8 +1,47 @@
-import Link from "next/link";
+'use client';
 
-export default function Navbar(){
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+
+  export default function Navbar() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const router = useRouter();
+  
+    const handleLogout = () => {
+      // Remove token from localStorage
+      localStorage.removeItem('token');
+      setIsLoggedIn(false);
+      // Redirect to the home page
+      router.push('/signin');
+    };
+  
+    useEffect(() => {
+      // Check for token in localStorage
+      const token = localStorage.getItem('token');
+      if (token) {
+        setIsLoggedIn(true);
+      } else {
+        router.push('/signin');
+      }
+  
+      // Add event listener for storage changes
+      const handleStorageChange = () => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+      };
+  
+      window.addEventListener('storage', handleStorageChange);
+  
+      // Cleanup event listener on component unmount
+      return () => {
+        window.removeEventListener('storage', handleStorageChange);
+      };
+    }, [router]);
 
     return (
+
       
 <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-3 ">
   <div className="container-fluid">
@@ -25,19 +64,21 @@ export default function Navbar(){
           <Link className="nav-link mx-2" href="/contact">contact</Link>
         </li>
         <form className="d-flex ">
-            <Link href="/signup ">
-              <button type="button" className="btn btn-outline-success me-2" >
-                Sign Up
-              </button></Link>
-            <Link href="/"><button type="button" className="btn btn-outline-success" >
-              Sign In
-            </button></Link>
+
+            {isLoggedIn ? (
+              <button className="btn btn-outline-danger me-2" onClick={handleLogout}>Logout</button>
+            ) : (
+              <>
+                <Link className="btn btn-outline-primary me-2" href="/signin">Sign In</Link>
+                <Link className="btn btn-primary" href="/signup">Sign Up</Link>
+              </>
+            )}
+            
           </form>
       </ul>
     </div>
   </div>
 </nav>
 
-    
     );
-  }
+}
